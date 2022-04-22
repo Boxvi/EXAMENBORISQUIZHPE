@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,14 +74,16 @@ public class ModeloProducto extends Producto implements CrudProducto {
     @Override
     public List<Producto> searchProducto(Context context, String codigo) {
         dbHelper = new DBHelper(context);
-        String sql = "SELECT * FROM productos where codigo='" + codigo + "'";
+        String sql = "SELECT * FROM productos where codigo = '" + codigo + "'";
+
+        System.out.println(sql);
 
         Producto producto = null;
         Cursor cursor = dbHelper.query(sql);
 
         ArrayList<Producto> productoArrayList = new ArrayList<>();
 
-        while (cursor.moveToFirst()) {
+        while (cursor.moveToNext()) {
             producto = new Producto();
             producto.setCodigo(cursor.getString(0));
             producto.setNombre(cursor.getString(1));
@@ -88,7 +91,7 @@ public class ModeloProducto extends Producto implements CrudProducto {
             producto.setPrecio(cursor.getDouble(3));
             producto.setStock(cursor.getInt(4));
             producto.setFecha(cursor.getString(5));
-            producto.setImagen(cursor.getBlob(6));
+            // producto.setImagen(cursor.getBlob(6));
             productoArrayList.add(producto);
         }
         dbHelper.close();

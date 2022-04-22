@@ -1,14 +1,13 @@
 package me.boris.examenborisquizhpe;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import me.boris.examenborisquizhpe.modelo.ModeloProducto;
@@ -19,7 +18,8 @@ import java.util.List;
 public class administacionActivity extends AppCompatActivity {
 
     private EditText txtNombre, txtStock, txtPrecio, txtDescripcion, txtSearch;
-    private Button btnCrear, btnEditar, btnEliminar;
+    private Button btnCrear, btnEditar, btnEliminar, btnCamara;
+    private ImageView imgView;
     private TextView txtID;
 
 
@@ -35,6 +35,17 @@ public class administacionActivity extends AppCompatActivity {
         txtStock = findViewById(R.id.txtStock);
         txtPrecio = findViewById(R.id.txtPrecio);
         txtDescripcion = findViewById(R.id.txtDescripcion);
+
+        btnCamara = findViewById(R.id.btnCamara);
+        imgView = findViewById(R.id.imgView);
+
+        btnCamara.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                abrirCamara();
+            }
+        });
 
         btnCrear = findViewById(R.id.btnCreate);
         btnCrear.setOnClickListener(new View.OnClickListener() {
@@ -154,4 +165,20 @@ public class administacionActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    private void abrirCamara() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imgView.setImageBitmap(imageBitmap);
+        }
+    }
+
 }
